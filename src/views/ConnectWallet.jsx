@@ -18,6 +18,7 @@ const ConnectWallet = () => {
         const contract = await initializeContract();
         console.log("contract :>> ", contract);
         const user = await contract.methods.findUserRole(res).call();
+        console.log("user role : ", user);
         localStorage.setItem("wallet_address", res);
         toast.success("Wallet Connected Successfully");
         if (user === "admin") {
@@ -47,8 +48,9 @@ const ConnectWallet = () => {
     if (
       localStorage.getItem("wallet_address") &&
       ["admin", "province", "contractor"].includes(localStorage.getItem("role"))
-    )
+    ) {
       navigate("/");
+    }
   });
 
   return (

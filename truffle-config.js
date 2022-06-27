@@ -18,6 +18,8 @@ module.exports = {
         return new HDWalletProvider(MNEMONIC, RINKEBY_NODE);
       },
       network_id: 4,
+      networkCheckTimeout: 1000000,
+      timeoutBlocks: 200,
     },
     binanceTestnet: {
       provider: function () {

@@ -9,6 +9,7 @@ import {
   Provinces,
   ErrorPage,
   Signup,
+  Contractors,
 } from "./views";
 
 const PrivateRoute = ({ component: Component }) => {
@@ -38,7 +39,7 @@ function App() {
             <Route index element={<Home />}></Route>
             <Route path="/profile" element={<Profile />}></Route>
             <Route path="/provinces" element={<Provinces />}></Route>
-            <Route path="/contractors" element={<Provinces />}></Route>
+            <Route path="/contractors" element={<Contractors />}></Route>
           </Route>
           <Route path="/*" element={<ErrorPage />}></Route>
         </Routes>
