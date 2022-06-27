@@ -44,12 +44,6 @@ const NavBar = () => {
                 >
                   Provinces
                 </NavLink>
-                <NavLink
-                  to="/contractors"
-                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white dark:text-white dark:hover:text-gray-800"
-                >
-                  Contractors
-                </NavLink>
               </>
             )}
             {role === "province" && (

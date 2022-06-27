@@ -20,11 +20,20 @@ const Signup = () => {
           formData.get("capital")
         )
         .send({ from: account });
-      if (registerProvince) console.log("Registered successfully");
+      if (registerProvince) {
+        navigate("/connect-wallet");
+      } else {
+        window.alert("Province Registration Failed");
+      }
     } else {
-      const registerContract = await contract.methods
+      const registerContractor = await contract.methods
         .registerContractor(formData.get("name"))
         .send({ from: account });
+      if (registerContractor) {
+        navigate("/connect-wallet");
+      } else {
+        window.alert("Contractor Registration Failed");
+      }
     }
   };
 

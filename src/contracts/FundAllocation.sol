@@ -24,6 +24,7 @@ contract FundAllocation {
         bool isRegistered;
     }
 
+
     address[] public provinceList;
     address[] public contractorList;
 
@@ -184,6 +185,13 @@ contract FundAllocation {
         );
         provinces[_address].isApproved = true;
         return true;
+    }
+
+    function allContractor(uint256 _id)public view returns(string memory,bool,bool){
+        address _address=contractorList[_id];
+        Contractor memory currentContractor=contractors[_address];
+        return (currentContractor.name,currentContractor.isRegistered,currentContractor.isApproved);
+
     }
 
     // function getTotalStates() public view returns(uint256){

@@ -1,6 +1,7 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider");
+require("dotenv").config();
 
-const MNEMONIC = "mnemonic of your account";
+const MNEMONIC = process.env.MNEUMONIC_KEY;
 const RINKEBY_NODE =
   "https://rinkeby.infura.io/v3/e08d0fc4dd864c68ba37e292d73e063a";
 const POLYGON_URL = "https://rpc-mumbai.maticvigil.com/";
@@ -18,6 +19,8 @@ module.exports = {
         return new HDWalletProvider(MNEMONIC, RINKEBY_NODE);
       },
       network_id: 4,
+      networkCheckTimeout: 1000000,
+      timeoutBlocks: 200,
     },
     binanceTestnet: {
       provider: function () {
