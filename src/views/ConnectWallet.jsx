@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import BlockUi from "react-block-ui";
 import "react-block-ui/style.css";
 import { initializeContract, loadWeb3 } from "../utils/web3";
+import { toast } from "react-toastify";
 // import { toast } from "react-toastify";
 
 const ConnectWallet = () => {
@@ -18,16 +19,16 @@ const ConnectWallet = () => {
         console.log("contract :>> ", contract);
         const user = await contract.methods.findUserRole(res).call();
         localStorage.setItem("wallet_address", res);
-        // toast.success("Wallet Connected Successfully");
+        toast.success("Wallet Connected Successfully");
         if (user === "admin") {
           localStorage.setItem("role", user);
           setLoading(false);
           navigate("/");
-        } else if (user === "provinces") {
+        } else if (user === "province") {
           localStorage.setItem("role", user);
           setLoading(false);
           navigate("/");
-        } else if (user === "contractors") {
+        } else if (user === "contractor") {
           localStorage.setItem("role", user);
           setLoading(false);
           navigate("/");

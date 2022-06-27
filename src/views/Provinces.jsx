@@ -6,17 +6,32 @@ import "react-block-ui/style.css";
 const Provinces = () => {
   const [loading, setLoading] = useState(false);
   const [allProvinces, setAllProvinces] = useState([]);
+  const [contractFA, setContractFA] = useState({});
 
   const fetchProvinceList = async () => {
     setLoading(true);
     const contract = await initializeContract();
+    setContractFA({ ...contract });
     const totalProvinces = await contract.methods.provinceIndex().call();
     const provinceList = [];
     for (let i = 0; i < totalProvinces; i++) {
       const province = await contract.methods.allProvince(i).call();
+      console.log("province :>> ", province);
       provinceList.push(province);
     }
     setAllProvinces(provinceList);
+    setLoading(false);
+  };
+
+  const handleProvinceApprove = async (province_address) => {
+    setLoading(true);
+    if (localStorage.getItem("role") === "admin") {
+      const account = localStorage.getItem("wallet_address");
+      const respond = await contractFA.methods
+        .verifyProvince(province_address)
+        .send({ from: account });
+      console.log("status :>> ", respond.status);
+    }
     setLoading(false);
   };
 
@@ -63,16 +78,31 @@ const Provinces = () => {
                   <td className="px-6 py-4">{item[1]}</td>
                   <td className="px-6 py-4">{item[2]}</td>
                   <td className="px-6 py-4 flex">
-                    <span>Active</span>
-                    <div className="w-3 h-3 bg-green-500 rounded-full ml-2"></div>
+                    <span>{item[5] ? "Active" : "Inactive"}</span>
+                    {item[5] ? (
+                      <div className="w-3 h-3 bg-green-500 rounded-full ml-2"></div>
+                    ) : (
+                      <div className="w-3 h-3 bg-red-500 rounded-full ml-2"></div>
+                    )}
                   </td>
                   <td className=" py-4">
-                    <button className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white">
-                      Approve
-                    </button>
-                    <button className="border-2 border-red-600 text-red-600 rounded-full px-4 py-2 hover:bg-red-600 hover:text-white">
-                      Reject
-                    </button>
+                    {!item[5] ? (
+                      <>
+                        <button
+                          className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
+                          onClick={() => handleProvinceApprove(item[3])}
+                        >
+                          Approve
+                        </button>
+                        <button className="border-2 border-red-600 text-red-600 rounded-full px-4 py-2 hover:bg-red-600 hover:text-white">
+                          Reject
+                        </button>
+                      </>
+                    ) : (
+                      <button className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white">
+                        View Detail
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
