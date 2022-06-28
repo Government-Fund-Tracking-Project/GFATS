@@ -10,6 +10,7 @@ import {
   ErrorPage,
   Signup,
   Contractors,
+  Projects,
 } from "./views";
 
 const PrivateRoute = ({ component: Component }) => {
@@ -40,6 +41,7 @@ function App() {
             <Route path="/profile" element={<Profile />}></Route>
             <Route path="/provinces" element={<Provinces />}></Route>
             <Route path="/contractors" element={<Contractors />}></Route>
+            <Route path="/projects" element={<Projects />}></Route>
           </Route>
           <Route path="/*" element={<ErrorPage />}></Route>
         </Routes>

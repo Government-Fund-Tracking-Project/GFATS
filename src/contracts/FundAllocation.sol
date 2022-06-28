@@ -24,6 +24,15 @@ contract FundAllocation {
         bool isRegistered;
     }
 
+    struct Project{
+        string name;
+        bool isAssigned;
+    }
+
+    mapping(address=>uint256) public projectIndex;
+    mapping(address=>Project[]) provinceProjects;
+
+
     address[] public provinceList;
     address[] public contractorList;
 
@@ -186,13 +195,26 @@ contract FundAllocation {
         return true;
     }
 
-    // function getTotalStates() public view returns(uint256){
-    //     return stateList.length;
-    // }
+    function allContractor(uint256 _id)public view returns(string memory,bool,bool){
+        address _address=contractorList[_id];
+        Contractor memory currentContractor=contractors[_address];
+        return (currentContractor.name,currentContractor.isRegistered,currentContractor.isApproved);
 
-    // function stateLogin() public{
-    //     if(states[msg.sender].isApproved == true ){
+    }
 
-    //     }
-    // }
+    function createProvinceProject(string memory _name) public registeredAndApprovedProvince(msg.sender) returns(bool){
+        Project memory currentProject=Project(_name,false);
+        provinceProjects[msg.sender].push(currentProject);
+        projectIndex[msg.sender]=projectIndex[msg.sender]+1;
+        return true;
+       
+    }
+
+    function allProject(address _address,uint256 _id)public view registeredAndApprovedProvince(_address) returns(string memory,bool){
+        require(_id<projectIndex[_address] && _id>=0,"Project doesn't exist");
+        Project memory currentProject=provinceProjects[_address][_id];
+        return (currentProject.name,currentProject.isAssigned);
+    }
+
+   
 }
