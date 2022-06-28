@@ -6,6 +6,7 @@ import "react-block-ui/style.css";
 const Projects = () => {
   const [loading, setLoading] = useState(false);
   const [allProject, setAllProject] = useState([]);
+  const [role, setRole] = useState("");
   const [contractFA, setContractFA] = useState({});
 
   const fetchProjects = async () => {
@@ -30,10 +31,31 @@ const Projects = () => {
       }
     } else {
       console.log("inside contractor");
-      projectList.push(["project road", true]);
+      //projectList.push(["project road", true]);
+      const totalProvinces = await contract.methods.provinceIndex().call();
+      const provinceList = [];
+      for (let i = 0; i < totalProvinces; i++) {
+        const province = await contract.methods.allProvince(i).call();
+        console.log("province :>> ", province);
+        provinceList.push(province[3]);
+      }
+
+      for (let i = 0; i < totalProvinces; i++) {
+        const totalProjects = await contract.methods
+          .projectIndex(provinceList[i])
+          .call();
+        for (let j = 0; j < totalProjects; j++) {
+          const project = await contract.methods
+            .allProject(provinceList[i], j)
+            .call();
+          console.log(`project ${j} : ${project}`);
+          projectList.push(project);
+        }
+      }
     }
     console.log(projectList);
     setAllProject(projectList);
+    setRole(myRole);
     setLoading(false);
   };
 
@@ -59,21 +81,25 @@ const Projects = () => {
 
   return (
     <>
-      <h3>Add a new Project</h3>
-      <form class="space-y-6" action="#" onSubmit={handleProjectAddition}>
-        <input
-          type="text"
-          name="projname"
-          id="projname"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-        />
-        <button
-          type="submit"
-          class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        >
-          Add Project
-        </button>
-      </form>
+      {role === "province" && (
+        <>
+          <h3>Add a new Project</h3>
+          <form class="space-y-6" action="#" onSubmit={handleProjectAddition}>
+            <input
+              type="text"
+              name="projname"
+              id="projname"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+            />
+            <button
+              type="submit"
+              class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Add Project
+            </button>
+          </form>
+        </>
+      )}
       <BlockUi tag="div" blocking={loading}>
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-16">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -115,11 +141,39 @@ const Projects = () => {
                       </>
                     )}
                   </td>
-                  <td className=" py-4">
-                    <button className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white">
-                      Assign
-                    </button>
-                  </td>
+                  {role === "province" ? (
+                    !item[1] ? (
+                      <td className=" py-4">
+                        <button className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white">
+                          Assign
+                        </button>
+                      </td>
+                    ) : (
+                      <td className=" py-4">
+                        <button
+                          className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 focus:outline-none"
+                          disabled
+                        >
+                          Assign
+                        </button>
+                      </td>
+                    )
+                  ) : !item[1] ? (
+                    <td className=" py-4">
+                      <button className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white">
+                        Apply
+                      </button>
+                    </td>
+                  ) : (
+                    <td className=" py-4">
+                      <button
+                        className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 focus:outline-none"
+                        disabled
+                      >
+                        Apply
+                      </button>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
