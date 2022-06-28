@@ -17,42 +17,14 @@ const Projects = () => {
     const myRole = localStorage.getItem("role");
     console.log("My wallet addr :", myAddress);
     const projectList = [];
+    const totalProjects = await contract.methods.projectIndex().call();
 
-    if (myRole !== "contractor") {
-      console.log("inside province");
-      const totalProjects = await contract.methods
-        .projectIndex(myAddress)
-        .call();
-
-      for (let i = 0; i < totalProjects; i++) {
-        const project = await contract.methods.allProject(myAddress, i).call();
-        console.log(`project ${i} : ${project}`);
-        projectList.push(project);
-      }
-    } else {
-      console.log("inside contractor");
-      //projectList.push(["project road", true]);
-      const totalProvinces = await contract.methods.provinceIndex().call();
-      const provinceList = [];
-      for (let i = 0; i < totalProvinces; i++) {
-        const province = await contract.methods.allProvince(i).call();
-        console.log("province :>> ", province);
-        provinceList.push(province[3]);
-      }
-
-      for (let i = 0; i < totalProvinces; i++) {
-        const totalProjects = await contract.methods
-          .projectIndex(provinceList[i])
-          .call();
-        for (let j = 0; j < totalProjects; j++) {
-          const project = await contract.methods
-            .allProject(provinceList[i], j)
-            .call();
-          console.log(`project ${j} : ${project}`);
-          projectList.push(project);
-        }
-      }
+    for (let i = 0; i < totalProjects; i++) {
+      const project = await contract.methods.allProject(i).call();
+      console.log(`project ${i} : ${project}`);
+      projectList.push(project);
     }
+
     console.log(projectList);
     setAllProject(projectList);
     setRole(myRole);
