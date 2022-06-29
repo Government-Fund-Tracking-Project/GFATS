@@ -13393,12 +13393,12 @@
     "97": {
       "events": {},
       "links": {},
-      "address": "0x7fabfABaFCc7492D25a45757FC0fdCBd771e417c",
-      "transactionHash": "0x38b4daa7d221154260a0b5f7de974954f96de734114a851f4bb3bb9b63bc9afa"
+      "address": "0xE85cafc8ae7A8C698442ec79Bb928f9c67ffda44",
+      "transactionHash": "0x32c5bdc514fb35b609df3c73fe59c65aeecfdb4f6462715b4fb0c0538019b47c"
     }
   },
   "schemaVersion": "3.4.7",
-  "updatedAt": "2022-06-27T15:56:27.515Z",
+  "updatedAt": "2022-06-27T16:16:25.280Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Create a sample ERC20 standard token",

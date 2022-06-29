@@ -1,18 +1,23 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const role = localStorage.getItem("role");
   const disconnectWallet = () => {
     localStorage.clear();
+    toast.success("Wallet disconnected Successful");
     navigate("/connect-wallet");
   };
   return (
     <>
-      <nav className="flex items-center justify-between flex-wrap bg-teal-500 dark:bg-gray-800 p-3">
+      <nav className="flex items-center justify-between flex-wrap bg-gray-800 dark:bg-gray-800 p-3">
         <div className="flex items-center flex-shrink-0 text-white mr-6">
-          <NavLink to="/" className="font-semibold text-xl tracking-tight">
+          <NavLink
+            to="/"
+            className="font-semibold text-xl tracking-tight text-teal-400"
+          >
             GFA`&`TS
           </NavLink>
         </div>
@@ -46,7 +51,7 @@ const NavBar = () => {
                 </NavLink>
               </>
             )}
-            {role === "province" && (
+            {(role === "admin" || role === "province") && (
               <>
                 <NavLink
                   to="/contractors"
@@ -58,7 +63,7 @@ const NavBar = () => {
             )}
           </div>
           <div>
-            <p className="inline-block text-sm px-4 py-2 cursor-pointer leading-none border rounded text-white border-white mr-2 hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0 dark:hover:text-gray-800">
+            <p className="inline-block text-sm px-4 py-2 cursor-pointer leading-none border rounded text-white border-teal-400 text-teal-400 mr-2 hover:border-transparent hover:text-gray-800 hover:bg-white mt-4 lg:mt-0 dark:hover:text-gray-800">
               {localStorage.getItem("wallet_address")}
             </p>
           </div>

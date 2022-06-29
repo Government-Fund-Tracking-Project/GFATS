@@ -16,9 +16,7 @@ const ConnectWallet = () => {
     await loadWeb3({
       onSuccess: async (res) => {
         const contract = await initializeContract();
-        console.log("contract :>> ", contract);
         const user = await contract.methods.findUserRole(res).call();
-        console.log("user role : ", user);
         localStorage.setItem("wallet_address", res);
         toast.success("Wallet Connected Successfully");
         if (user === "admin") {
@@ -26,9 +24,19 @@ const ConnectWallet = () => {
           setLoading(false);
           navigate("/");
         } else if (user === "province") {
-          localStorage.setItem("role", user);
-          setLoading(false);
-          navigate("/");
+          try {
+            const province = await contract.methods
+              .myProvince()
+              .call({ from: res });
+
+            localStorage.setItem("role", user);
+            setLoading(false);
+            navigate("/");
+          } catch (err) {
+            setLoading(false);
+
+            navigate("/contact-admin");
+          }
         } else if (user === "contractor") {
           localStorage.setItem("role", user);
           setLoading(false);
@@ -60,26 +68,26 @@ const ConnectWallet = () => {
           <div className="bg-white rounded-2xl shadow-2xl flex w-2/3 max-w-4xl">
             <div className="w-3/5 p-5 bg-gray-300 rounded-tl-2xl rounded-bl-2xl">
               <div className="mt-24">
-                <h2 className="text-2xl font-bold mvb-2 mt-12 text-teal-500 dark: text-gray-800">
+                <h2 className="text-2xl font-bold mvb-2 mt-12 text-gray-800 dark: text-gray-800">
                   Government Fund Allocation
                 </h2>
-                <h4 className="text-xl font-bold mvb-2 text-teal-500 dark: text-gray-800">
+                <h4 className="text-xl font-bold mvb-2 text-gray-800 dark: text-gray-800">
                   And
                 </h4>
-                <h3 className="text-2xl font-bold mvb-2 text-teal-500 dark: text-gray-800">
+                <h3 className="text-2xl font-bold mvb-2 text-gray-800 dark: text-gray-800">
                   Tracking System
                 </h3>
               </div>
             </div>
-            <div className="w-2/5 bg-teal-500 text-white rounded-tr-2xl rounded-br-2xl py-36 px-12 dark: bg-gray-800">
+            <div className="w-2/5 bg-gray-800 text-white rounded-tr-2xl rounded-br-2xl py-36 px-12 dark: bg-gray-800">
               <button
-                className="border-2 border-white rounded-full px-12 py-2 hover:bg-white hover:text-teal-500 dark:hover:text-gray-800  dark: text-white"
+                className="border-2 border-white rounded-full px-12 py-2 hover:bg-white hover:text-gray-800 dark:hover:text-gray-800  dark: text-white"
                 onClick={getLoadedWeb3}
               >
                 Connect Wallet
               </button>
               {/* <button
-                className="border-2 border-white rounded-full px-12 py-2 mt-2 hover:bg-white hover:text-teal-500 dark:hover:text-gray-800  dark: text-white"
+                className="border-2 border-white rounded-full px-12 py-2 mt-2 hover:bg-white hover:text-gray-800 dark:hover:text-gray-800  dark: text-white"
                 onClick={() => setShowModal(true)}
               >
                 Sign Up

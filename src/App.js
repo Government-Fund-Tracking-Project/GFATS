@@ -6,11 +6,13 @@ import {
   Home,
   ConnectWallet,
   Profile,
-  Provinces,
   ErrorPage,
   Signup,
   Contractors,
+  ContactAdmin,
 } from "./views";
+
+import { Provinces, ProvincesList, ProvincesDetail } from "./views/admin";
 
 const PrivateRoute = ({ component: Component }) => {
   let is_authenticate = Boolean(localStorage.getItem("wallet_address"));
@@ -38,9 +40,15 @@ function App() {
           >
             <Route index element={<Home />}></Route>
             <Route path="/profile" element={<Profile />}></Route>
-            <Route path="/provinces" element={<Provinces />}></Route>
+
+            <Route path="/provinces/" element={<Provinces />}>
+              <Route index element={<ProvincesList />}></Route>
+              <Route path=":id" element={<ProvincesDetail />}></Route>
+            </Route>
+
             <Route path="/contractors" element={<Contractors />}></Route>
           </Route>
+          <Route path="/contact-admin" element={<ContactAdmin />}></Route>
           <Route path="/*" element={<ErrorPage />}></Route>
         </Routes>
       </BrowserRouter>

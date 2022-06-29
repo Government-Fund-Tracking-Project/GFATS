@@ -4,8 +4,8 @@ import { NavLink } from "react-router-dom";
 const Footer = () => {
   return (
     <>
-      <footer className="bg-teal-500 bottom-0 w-full ">
-        <div className="py-6 px-4 bg-teal-500 md:flex md:items-center md:justify-between dark:bg-gray-800">
+      <footer className="bg-gray-800 bottom-0 w-full ">
+        <div className="py-6 px-4 bg-gray-800 md:flex md:items-center md:justify-between dark:bg-gray-800">
           <span className="text-sm text-gray-300 sm:text-center">
             © 2022. All Rights Reserved.
           </span>

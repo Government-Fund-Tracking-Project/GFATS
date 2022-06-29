@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { initializeContract } from "../utils/web3";
 
 const Signup = () => {
@@ -29,11 +30,13 @@ const Signup = () => {
       const registerContractor = await contract.methods
         .registerContractor(formData.get("name"))
         .send({ from: account });
+      console.log("registerContractor :>> ", registerContractor);
       if (registerContractor) {
-        navigate("/connect-wallet");
+        toast.info("Contact admin for your complete registration");
       } else {
-        window.alert("Contractor Registration Failed");
+        toast.error("Contractor Registration Failed");
       }
+      navigate("/connect-wallet");
     }
   };
 

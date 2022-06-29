@@ -1,6 +1,7 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider");
+require("dotenv").config();
 
-const MNEMONIC = "process.env.REACT_APP_MNEMONICS";
+const MNEMONIC = process.env.MNEMONIC;
 const RINKEBY_NODE =
   "https://rinkeby.infura.io/v3/e08d0fc4dd864c68ba37e292d73e063a";
 const POLYGON_URL = "https://rpc-mumbai.maticvigil.com/";

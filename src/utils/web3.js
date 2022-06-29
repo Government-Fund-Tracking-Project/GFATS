@@ -1,5 +1,6 @@
 import Web3 from "web3";
 import FundAllocation from "../abis/FundAllocation.json";
+import FAerc20 from "../abis/FAerc20.json";
 
 const noOp = () => {};
 
@@ -54,6 +55,20 @@ export const initializeContract = async () => {
     return contract;
     // const role = await contract.methods.findUserRole(wallet).call();
     // return role;
+  } else {
+    console.log("Error");
+  }
+};
+
+export const initializeContractERC20 = async () => {
+  if (window.web3) {
+    const { web3 } = window;
+    const { abi } = FAerc20;
+    const networkId = await web3.eth.net.getId();
+    const networkData = FAerc20.networks[networkId];
+    const { address } = networkData;
+    const contract = new web3.eth.Contract(abi, address);
+    return contract;
   } else {
     console.log("Error");
   }

@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { toast } from "react-toastify";
 
-const Home = ({ role }) => {
-  console.log("role :>> ", role);
+const Home = () => {
+  useEffect(() => {
+    const user = localStorage.getItem("role").toUpperCase();
+    toast.info(`You are logged in as ${user}`);
+  }, []);
   return <div>{localStorage.getItem("role")}</div>;
 };
 

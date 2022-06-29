@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { initializeContract } from "../utils/web3";
+import { initializeContract } from "../../utils/web3";
 import BlockUi from "react-block-ui";
 import "react-block-ui/style.css";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
-const Provinces = () => {
+const ProvincesList = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [allProvinces, setAllProvinces] = useState([]);
   const [contractFA, setContractFA] = useState({});
+  const [approve, setApprove] = useState(true);
 
   const fetchProvinceList = async () => {
     setLoading(true);
@@ -30,14 +34,26 @@ const Provinces = () => {
       const respond = await contractFA.methods
         .verifyProvince(province_address)
         .send({ from: account });
-      console.log("status :>> ", respond.status);
+      if (respond.status) {
+        setApprove(!approve);
+        toast.success("Successfully approved");
+      } else toast.error("Fail to approve");
     }
     setLoading(false);
   };
 
+  const provinceDetail = (id, provinceAddress, item) => {
+    navigate(`/provinces/${id}`, {
+      state: {
+        provinceAddress: provinceAddress,
+        province: item,
+      },
+    });
+  };
+
   useEffect(() => {
     fetchProvinceList();
-  }, []);
+  }, [approve]);
 
   return (
     <>
@@ -94,12 +110,18 @@ const Provinces = () => {
                         >
                           Approve
                         </button>
-                        <button className="border-2 border-red-600 text-red-600 rounded-full px-4 py-2 hover:bg-red-600 hover:text-white">
-                          Reject
+                        <button
+                          onClick={() => provinceDetail(item[1], item[3], item)}
+                          className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
+                        >
+                          View Detail
                         </button>
                       </>
                     ) : (
-                      <button className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white">
+                      <button
+                        onClick={() => provinceDetail(item[1], item[3], item)}
+                        className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
+                      >
                         View Detail
                       </button>
                     )}
@@ -114,4 +136,4 @@ const Provinces = () => {
   );
 };
 
-export default Provinces;
+export default ProvincesList;
