@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { initializeContract, initializeContractERC20 } from "../utils/web3";
 import BlockUi from "react-block-ui";
 import "react-block-ui/style.css";
+import Web3 from "web3";
 
 const Profile = () => {
   const [contractFA, setContractFA] = useState({});
@@ -45,7 +46,8 @@ const Profile = () => {
 
   const handleMint = async () => {
     setLoading(true);
-    const token = (+noOfToken * 10 ** 18).toString();
+    console.log("Web3 :>> ", Web3);
+    const token = Web3.utils.toWei(noOfToken);
     const response = await contractERC20.methods
       .mint(token, address)
       .send({ from: address });
