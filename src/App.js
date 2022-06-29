@@ -11,6 +11,8 @@ import {
   Signup,
   Contractors,
   Projects,
+  AddProject,
+  MyProjects,
 } from "./views";
 
 const PrivateRoute = ({ component: Component }) => {
@@ -42,6 +44,8 @@ function App() {
             <Route path="/provinces" element={<Provinces />}></Route>
             <Route path="/contractors" element={<Contractors />}></Route>
             <Route path="/projects" element={<Projects />}></Route>
+            <Route path="/addproject" element={<AddProject />}></Route>
+            <Route path="/myprojects" element={<MyProjects />}></Route>
           </Route>
           <Route path="/*" element={<ErrorPage />}></Route>
         </Routes>

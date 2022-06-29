@@ -13399,12 +13399,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x17077b504395a7e037eCE282e2D809EBd0F08164",
-      "transactionHash": "0xe2fd1d57d3238e670c8043a1db7bcc5b01e5929803bda5986be1dbf9eed55956"
+      "address": "0x2ac0f83216506F3620dAd9B4887F10a00c6c48eE",
+      "transactionHash": "0x4b00b001f869bd1a655520356794cc0c6056586907327d859f6bba5b7668c509"
     }
   },
   "schemaVersion": "3.4.7",
-  "updatedAt": "2022-06-28T13:44:35.508Z",
+  "updatedAt": "2022-06-29T13:23:41.613Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Create a sample ERC20 standard token",

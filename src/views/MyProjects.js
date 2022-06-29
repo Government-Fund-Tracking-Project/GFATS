@@ -3,16 +3,14 @@ import { initializeContract } from "../utils/web3";
 import BlockUi from "react-block-ui";
 import "react-block-ui/style.css";
 
-const Projects = () => {
+const MyProjects = () => {
   const [loading, setLoading] = useState(false);
   const [allProject, setAllProject] = useState([]);
   const [role, setRole] = useState("");
-  const [contractFA, setContractFA] = useState({});
 
   const fetchProjects = async () => {
     setLoading(true);
     const contract = await initializeContract();
-    setContractFA({ ...contract });
     const myAddress = localStorage.getItem("wallet_address");
     const myRole = localStorage.getItem("role");
     console.log("My wallet addr :", myAddress);
@@ -22,7 +20,8 @@ const Projects = () => {
     for (let i = 0; i < totalProjects; i++) {
       const project = await contract.methods.allProject(i).call();
       console.log(`project ${i} : ${project}`);
-      projectList.push(project);
+      if (project[2] === myAddress || project[3] === myAddress)
+        projectList.push(project);
     }
 
     console.log(projectList);
@@ -34,18 +33,6 @@ const Projects = () => {
   useEffect(() => {
     fetchProjects();
   }, []);
-
-  const handleProjectApply = async (project_id) => {
-    setLoading(true);
-    if (localStorage.getItem("role") === "contractor") {
-      const account = localStorage.getItem("wallet_address");
-      const respond = await contractFA.methods
-        .applyForProject(project_id)
-        .send({ from: account });
-      console.log("status :>> ", respond.status);
-    }
-    setLoading(false);
-  };
 
   return (
     <>
@@ -63,11 +50,10 @@ const Projects = () => {
                 <th scope="col" className="px-6 py-3">
                   Status
                 </th>
-                {role === "contractor" && (
-                  <th scope="col" className="px-6 py-3">
-                    Action
-                  </th>
-                )}
+
+                <th scope="col" className="px-6 py-3">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -88,7 +74,7 @@ const Projects = () => {
                   >
                     {item[1]}
                   </th>
-                  <td className="px-6 py-4 flex">
+                  <th className="px-6 py-4 ">
                     {item[4] ? (
                       <>
                         <span>Assigned</span>
@@ -100,27 +86,22 @@ const Projects = () => {
                         <div className="w-3 h-3 bg-red-500 rounded-full ml-2"></div>
                       </>
                     )}
-                  </td>
-                  {role === "contractor" &&
-                    (!item[4] ? (
-                      <td className=" py-4">
-                        <button
-                          className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
-                          onClick={() => handleProjectApply(index)}
-                        >
-                          Apply
+                  </th>
+                  <th className="px-6 py-4 ">
+                    {item[4] ? (
+                      <>
+                        <button className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white">
+                          View Contractor
                         </button>
-                      </td>
+                      </>
                     ) : (
-                      <td className=" py-4">
-                        <button
-                          className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 focus:outline-none"
-                          disabled
-                        >
-                          Apply
+                      <>
+                        <button className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white">
+                          View Applications
                         </button>
-                      </td>
-                    ))}
+                      </>
+                    )}
+                  </th>
                 </tr>
               ))}
             </tbody>
@@ -131,4 +112,4 @@ const Projects = () => {
   );
 };
 
-export default Projects;
+export default MyProjects;

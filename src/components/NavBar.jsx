@@ -61,6 +61,18 @@ const NavBar = () => {
                 >
                   Projects
                 </NavLink>
+                <NavLink
+                  to="/addproject"
+                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4 dark:text-white dark:hover:text-gray-800"
+                >
+                  Add Project
+                </NavLink>
+                <NavLink
+                  to="/myprojects"
+                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4 dark:text-white dark:hover:text-gray-800"
+                >
+                  My Projects
+                </NavLink>
               </>
             )}
             {role === "contractor" && (
@@ -72,6 +84,12 @@ const NavBar = () => {
                   className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4 dark:text-white dark:hover:text-gray-800"
                 >
                   Projects
+                </NavLink>
+                <NavLink
+                  to="/myprojects"
+                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4 dark:text-white dark:hover:text-gray-800"
+                >
+                  My Projects
                 </NavLink>
               </>
             )}

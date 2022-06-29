@@ -233,6 +233,7 @@ contract FundAllocation {
 
     function applyForProject(uint256 _id)public registeredAndApprovedContractor(msg.sender) returns(bool){
         require(projects[_id].isAssigned==false,"Project is already assigned. You cannot apply for this project");
+        require(_checkIfContractorApplied(_id,msg.sender),"Project already applied for by contractor");
         projectApplications[_id].push(msg.sender);
         return true;
     }
