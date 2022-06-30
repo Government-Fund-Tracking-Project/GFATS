@@ -5,6 +5,7 @@ import "react-block-ui/style.css";
 import Swal from "sweetalert2";
 import { initializeContractERC20 } from "../../utils/web3";
 import { toast } from "react-toastify";
+import Web3 from "web3";
 
 const ProvincesDetail = () => {
   const location = useLocation();
@@ -19,7 +20,7 @@ const ProvincesDetail = () => {
   const allocateToken = async () => {
     const { value: tokenAmount } = await Swal.fire({
       title: "Allocate token to",
-      input: "number",
+      input: "string",
       inputLabel: `${provinceAddress}`,
       inputPlaceholder: "Enter the token number",
       confirmButtonText: "Confirm",
@@ -28,7 +29,7 @@ const ProvincesDetail = () => {
     if (tokenAmount) {
       setLoading(true);
       const adminAddress = localStorage.getItem("wallet_address");
-      const token = (tokenAmount * 10 ** 18).toString();
+      const token = Web3.utils.toWei(tokenAmount);
       console.log("token :>> ", token);
       const contractERC20 = await initializeContractERC20();
       try {
