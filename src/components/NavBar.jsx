@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 
 const NavBar = () => {
   const navigate = useNavigate();
+
   const role = localStorage.getItem("role");
   const disconnectWallet = () => {
     localStorage.clear();
@@ -55,9 +56,45 @@ const NavBar = () => {
               <>
                 <NavLink
                   to="/contractors"
-                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white dark:text-white dark:hover:text-gray-800"
+                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4 dark:text-white dark:hover:text-gray-800"
                 >
                   Contractors
+                </NavLink>
+                <NavLink
+                  to="/projects"
+                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4 dark:text-white dark:hover:text-gray-800"
+                >
+                  Projects
+                </NavLink>
+                <NavLink
+                  to="/addproject"
+                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4 dark:text-white dark:hover:text-gray-800"
+                >
+                  Add Project
+                </NavLink>
+                <NavLink
+                  to="/myprojects"
+                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4 dark:text-white dark:hover:text-gray-800"
+                >
+                  My Projects
+                </NavLink>
+              </>
+            )}
+            {role === "contractor" && (
+              <>
+                <NavLink
+                  to={{
+                    pathname: "/projects",
+                  }}
+                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4 dark:text-white dark:hover:text-gray-800"
+                >
+                  Projects
+                </NavLink>
+                <NavLink
+                  to="/myprojects"
+                  className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4 dark:text-white dark:hover:text-gray-800"
+                >
+                  My Projects
                 </NavLink>
               </>
             )}

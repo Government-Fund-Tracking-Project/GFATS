@@ -5,6 +5,7 @@ pragma solidity ^0.8.1;
 contract FundAllocation {
     uint256 public provinceIndex = 0;
     uint256 public contractorIndex = 0;
+    uint256 public projectIndex=0;
     address private admin;
 
     struct Province {
@@ -23,6 +24,20 @@ contract FundAllocation {
         bool isApproved;
         bool isRegistered;
     }
+
+    struct Project{
+        string name;
+        string province;
+        address projectOwner;
+        address projectAssignedTo;
+        bool isAssigned;
+        bool isCompleted;
+    }
+
+    //mapping(address=>uint256) public projectIndex;
+    mapping(uint256=>Project) projects;
+    mapping(uint256=>address[]) projectApplications;
+
 
     address[] public provinceList;
     address[] public contractorList;
@@ -58,7 +73,16 @@ contract FundAllocation {
         require(
             (provinces[_address].isRegistered &&
                 provinces[_address].isApproved),
-            "You are not registered or approved province"
+            " Not registered or approved province"
+        );
+        _;
+    }
+
+     modifier registeredAndApprovedContractor(address _address) {
+        require(
+            (contractors[_address].isRegistered &&
+                contractors[_address].isApproved),
+            "Not registered or approved contractor"
         );
         _;
     }
@@ -182,17 +206,65 @@ contract FundAllocation {
             !contractors[_address].isApproved,
             "The Contractor is already approved"
         );
-        provinces[_address].isApproved = true;
+        contractors[_address].isApproved = true;
         return true;
     }
 
-    // function getTotalStates() public view returns(uint256){
-    //     return stateList.length;
-    // }
+    function allContractor(uint256 _id)public view returns(string memory,bool,bool){
+        address _address=contractorList[_id];
+        Contractor memory currentContractor=contractors[_address];
+        return (currentContractor.name,currentContractor.isRegistered,currentContractor.isApproved);
 
-    // function stateLogin() public{
-    //     if(states[msg.sender].isApproved == true ){
+    }
 
-    //     }
-    // }
+    function createProvinceProject(string memory _name) public registeredAndApprovedProvince(msg.sender) returns(bool){
+        Project memory currentProject=Project(_name,provinces[msg.sender].name,msg.sender,msg.sender,false,false);
+        projects[projectIndex]=currentProject;
+        projectIndex=projectIndex+1;
+        return true;
+       
+    }
+
+    function allProject(uint256 _id)public view returns(string memory,string memory,address,address,bool,bool){
+        require(_id>=0 && _id<projectIndex,"Project doesn't exist");
+        Project memory currentProject=projects[_id];
+        return (currentProject.name,currentProject.province,currentProject.projectOwner,currentProject.projectAssignedTo,currentProject.isAssigned,currentProject.isCompleted);
+    }
+
+    function applyForProject(uint256 _id)public registeredAndApprovedContractor(msg.sender) returns(bool){
+        require(projects[_id].isAssigned==false,"Project is already assigned. You cannot apply for this project");
+        require(_checkIfContractorApplied(_id,msg.sender),"Project already applied for by contractor");
+        projectApplications[_id].push(msg.sender);
+        return true;
+    }
+
+    function getProjectApplications(uint256 _id)public view returns(address[] memory){
+        require(_id>=0 && _id<projectIndex,"Project doesn't exist");
+        return projectApplications[_id];
+    }
+
+    function assignProject(uint256 _id,address _address)public registeredAndApprovedProvince(msg.sender) registeredAndApprovedContractor(_address) returns(bool){
+        require(_checkIfContractorApplied(_id,_address),"Project is not applied for by contractor");
+        require(projects[_id].projectOwner==msg.sender,"Project not created by this province");
+        projects[_id].isAssigned=true;
+        projects[_id].projectAssignedTo=_address;
+        return true;
+
+    }
+
+    function _checkIfContractorApplied(uint256 _id,address _address)internal view returns(bool){
+        bool hasApplied=false;
+        for (uint i=0; i < projectApplications[_id].length; i++) {
+    if (_address == projectApplications[_id][i]) {
+        hasApplied=true;
+
+        break;
+    }
+    }
+     return hasApplied;
+    }
+
+   
+
+   
 }

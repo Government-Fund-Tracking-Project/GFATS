@@ -6,18 +6,36 @@ import "react-block-ui/style.css";
 const Contractors = () => {
   const [loading, setLoading] = useState(false);
   const [allContractors, setAllContractors] = useState([]);
+  const [contractFA, setContractFA] = useState({});
 
   const fetchContractorList = async () => {
     setLoading(true);
     const contract = await initializeContract();
+    setContractFA({ ...contract });
     const totalContractors = await contract.methods.contractorIndex().call();
     const contractorList = [];
     for (let i = 0; i < totalContractors; i++) {
       const contractor = await contract.methods.allContractor(i).call();
+      const contractorAddress = await contract.methods.contractorList(i).call();
+      console.log(contractorAddress);
       console.log(`contractor ${i} : ${contractor}`);
-      contractorList.push(contractor);
+      console.log(contractor);
+      contractorList.push({ ...contractor, 3: contractorAddress });
     }
     setAllContractors(contractorList);
+    setLoading(false);
+  };
+
+  const handleContractorsApprove = async (contractor_address) => {
+    console.log("inside approve");
+    setLoading(true);
+    if (localStorage.getItem("role") === "province") {
+      const account = localStorage.getItem("wallet_address");
+      const respond = await contractFA.methods
+        .verifyContractor(contractor_address)
+        .send({ from: account });
+      console.log("status :>> ", respond.status);
+    }
     setLoading(false);
   };
 
@@ -60,9 +78,20 @@ const Contractors = () => {
                     <div className="w-3 h-3 bg-green-500 rounded-full ml-2"></div>
                   </td>
                   <td className=" py-4">
-                    <button className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white">
-                      Approve
-                    </button>
+                    {!item[2] ? (
+                      <>
+                        <button
+                          className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
+                          onClick={() => handleContractorsApprove(item[3])}
+                        >
+                          Approve
+                        </button>
+                      </>
+                    ) : (
+                      <button className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white">
+                        View Detail
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

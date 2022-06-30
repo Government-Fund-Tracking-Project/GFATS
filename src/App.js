@@ -10,6 +10,9 @@ import {
   Signup,
   Contractors,
   ContactAdmin,
+  Projects,
+  AddProject,
+  MyProjects,
 } from "./views";
 
 import { Provinces, ProvincesList, ProvincesDetail } from "./views/admin";
@@ -47,6 +50,9 @@ function App() {
             </Route>
 
             <Route path="/contractors" element={<Contractors />}></Route>
+            <Route path="/projects" element={<Projects />}></Route>
+            <Route path="/addproject" element={<AddProject />}></Route>
+            <Route path="/myprojects" element={<MyProjects />}></Route>
           </Route>
           <Route path="/contact-admin" element={<ContactAdmin />}></Route>
           <Route path="/*" element={<ErrorPage />}></Route>
