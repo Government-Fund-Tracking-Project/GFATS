@@ -50,6 +50,15 @@ contract FundAllocation {
         admin = msg.sender;
     }
 
+    //events
+    event provinceRegistered(address _address,string _provincename);
+    event provinceVerified(address _of,address _by);
+    event contractorRegistered(address _address,string _contractorname);
+    event contractorVerified(address _of,address _by);
+    event provinceProjectCreated(address _address,string _projectname);
+    event appliedForProject(address _address,uint256 _id);
+    event assignedProject(address _to,address _by,uint256 _id);
+
     modifier excludeAdmin(address _address) {
         require(_address != admin, "Admin cannot be registered as Province");
         _;
@@ -121,6 +130,7 @@ contract FundAllocation {
         provinces[_address].wallet = _address;
         provinces[_address].isRegistered = true;
         isProvince[_address] = true;
+        emit provinceRegistered(_address, _name);
         return true;
     }
 
@@ -134,6 +144,7 @@ contract FundAllocation {
             "The province is already approved"
         );
         provinces[_address].isApproved = true;
+        emit provinceVerified(_address,msg.sender);
         return true;
     }
 
@@ -194,6 +205,7 @@ contract FundAllocation {
         contractors[_address].name = _name;
         contractors[_address].isRegistered = true;
         isContractor[_address] = true;
+        emit contractorRegistered(_address, _name);
     }
 
     function verifyContractor(address _address)
@@ -206,6 +218,7 @@ contract FundAllocation {
             "The Contractor is already approved"
         );
         contractors[_address].isApproved = true;
+        emit contractorVerified(_address, msg.sender);
         return true;
     }
 
@@ -252,6 +265,7 @@ contract FundAllocation {
         );
         projects[projectIndex] = currentProject;
         projectIndex = projectIndex + 1;
+        emit provinceProjectCreated(msg.sender,_name);
         return true;
     }
 
@@ -293,6 +307,7 @@ contract FundAllocation {
             "Project already applied for by contractor"
         );
         projectApplications[_id].push(msg.sender);
+        emit appliedForProject(msg.sender, _id);
         return true;
     }
 
@@ -321,6 +336,7 @@ contract FundAllocation {
         );
         projects[_id].isAssigned = true;
         projects[_id].projectAssignedTo = _address;
+        emit assignedProject(_address, msg.sender, _id);
         return true;
     }
 
