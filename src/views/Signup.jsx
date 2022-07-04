@@ -22,7 +22,7 @@ const Signup = () => {
         )
         .send({ from: account });
       if (registerProvince) {
-        navigate("/connect-wallet");
+        navigate("/contact-admin");
       } else {
         window.alert("Province Registration Failed");
       }
@@ -36,7 +36,7 @@ const Signup = () => {
       } else {
         toast.error("Contractor Registration Failed");
       }
-      navigate("/connect-wallet");
+      navigate("/contact-admin");
     }
   };
 

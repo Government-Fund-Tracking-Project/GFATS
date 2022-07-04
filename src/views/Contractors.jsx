@@ -74,8 +74,14 @@ const Contractors = () => {
                     {item[0]}
                   </th>
                   <td className="px-6 py-4 flex">
-                    <span>Active</span>
-                    <div className="w-3 h-3 bg-green-500 rounded-full ml-2"></div>
+                    <span>{item[2] ? "Active" : "Inactive"}</span>
+                    <div
+                      className={
+                        item[2]
+                          ? "w-3 h-3 bg-green-500 rounded-full ml-2"
+                          : "w-3 h-3 bg-red-500 rounded-full ml-2"
+                      }
+                    ></div>
                   </td>
                   <td className=" py-4">
                     {!item[2] ? (

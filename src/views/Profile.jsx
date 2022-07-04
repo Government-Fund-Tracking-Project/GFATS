@@ -10,7 +10,7 @@ const Profile = () => {
   const [contractERC20, setContractERC20] = useState({});
   const [balance, setBalance] = useState("");
   const [symbol, setSymbol] = useState("");
-  const [noOfToken, setNoOfToken] = useState();
+  const [noOfToken, setNoOfToken] = useState("0");
   const [loading, setLoading] = useState(false);
   const [provinceNumber, setProvinceNumber] = useState("");
   const [contractorNumber, setContractorNumber] = useState("");
@@ -51,8 +51,9 @@ const Profile = () => {
     const response = await contractERC20.methods
       .mint(token, address)
       .send({ from: address });
-    if (response) toast.success(`Successfully minted ${noOfToken} token`);
-    else toast.error("Something went wrong");
+    if (response) {
+      toast.success(`Successfully minted ${noOfToken} token`);
+    } else toast.error("Something went wrong");
     setLoading(false);
   };
 
@@ -142,6 +143,7 @@ const Profile = () => {
                       onChange={(e) => {
                         setNoOfToken(e.target.value);
                       }}
+                      value={noOfToken}
                     />
                     <p
                       onClick={handleMint}

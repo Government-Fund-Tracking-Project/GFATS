@@ -18,13 +18,13 @@ const ProvincesDetail = () => {
   const [loading, setLoading] = useState(false);
 
   const allocateToken = async () => {
+    console.log("provinceAddress :>> ", provinceAddress);
     const { value: tokenAmount } = await Swal.fire({
       title: "Allocate token to",
-      input: "string",
+      input: "text",
       inputLabel: `${provinceAddress}`,
       inputPlaceholder: "Enter the token number",
       confirmButtonText: "Confirm",
-      cancelButtonText: "Cancel",
     });
     if (tokenAmount) {
       setLoading(true);

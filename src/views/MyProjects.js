@@ -2,20 +2,32 @@ import { useState, useEffect } from "react";
 import { initializeContract } from "../utils/web3";
 import BlockUi from "react-block-ui";
 import "react-block-ui/style.css";
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
+import AllApplicants from "./modals/AllApplicants";
 
 const MyProjects = () => {
   const [loading, setLoading] = useState(false);
   const [allProject, setAllProject] = useState([]);
   const [role, setRole] = useState("");
+  const [contractFA, setContractFA] = useState({});
+  const [fetchStatus, setFetchStatus] = useState(false);
+  const [currentAddress, setCurrentAddress] = useState("");
+  const [viewStatus, setViewStatus] = useState(false);
+  const [applicantsList, setApplicantsList] = useState([]);
+  const [applicants, setApplicants] = useState([]);
+  const [currentProject, setCurrentProject] = useState();
 
   const fetchProjects = async () => {
     setLoading(true);
     const contract = await initializeContract();
+    setContractFA({ ...contract });
     const myAddress = localStorage.getItem("wallet_address");
+    setCurrentAddress(myAddress);
     const myRole = localStorage.getItem("role");
-    console.log("My wallet addr :", myAddress);
     const projectList = [];
     const totalProjects = await contract.methods.projectIndex().call();
+    console.log("totalProjects :>> ", totalProjects);
 
     for (let i = 0; i < totalProjects; i++) {
       const project = await contract.methods.allProject(i).call();
@@ -24,20 +36,95 @@ const MyProjects = () => {
         projectList.push(project);
     }
 
-    console.log(projectList);
+    console.log("projectList :>> ", projectList);
     setAllProject(projectList);
     setRole(myRole);
     setLoading(false);
   };
 
+  const addProject = async () => {
+    await Swal.fire({
+      title: "Add a project",
+      input: "text",
+      inputPlaceholder: "Enter the title of Project",
+      confirmButtonText: "Confirm",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        console.log(result.value);
+        try {
+          const projectAddition = await contractFA.methods
+            .createProvinceProject(result.value)
+            .send({ from: currentAddress });
+          setFetchStatus(!fetchStatus);
+          toast.success("Project added successfully");
+        } catch (error) {
+          toast.error("Error while adding project");
+          console.log("error occured", error);
+        }
+      }
+    });
+  };
+
+  const viewApplications = async (project_id) => {
+    setViewStatus(true);
+    const list = [];
+    const applicants = await contractFA.methods
+      .getProjectApplications(project_id)
+      .call({ from: currentAddress });
+    setApplicants(applicants);
+    for (let i = 0; i < applicants.length; i++) {
+      const contractor = await contractFA.methods
+        .myContractor()
+        .call({ from: applicants[i] });
+      list.push(contractor);
+    }
+    setApplicantsList(list);
+  };
+
+  const handleAssignProject = async (id) => {
+    try {
+      await contractFA.methods
+        .assignProject(currentProject, applicants[id])
+        .send({ from: currentAddress });
+      toast.success(`Successfully project assign to ${applicants[id]}`);
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
+    setViewStatus(false);
+    setFetchStatus(!fetchStatus);
+  };
+
   useEffect(() => {
     fetchProjects();
-  }, []);
+  }, [fetchStatus]);
 
   return (
     <>
       <BlockUi tag="div" blocking={loading}>
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-16">
+        {viewStatus && (
+          <AllApplicants
+            setViewStatus={setViewStatus}
+            applicantsList={applicantsList}
+            handleAssignProject={handleAssignProject}
+          />
+        )}
+        <div
+          className={
+            !viewStatus
+              ? "relative overflow-x-auto shadow-md sm:rounded-lg p-16"
+              : "relative overflow-x-auto shadow-md sm:rounded-lg p-16 blur"
+          }
+        >
+          {role === "province" && (
+            <div>
+              <p
+                className="inline-block text-sm px-4 mb-2 py-2 cursor-pointer leading-none border rounded text-blue-500 font-bold border-blue-600 hover:border-transparent hover:text-white hover:bg-red-600 mt-4 lg:mt-0"
+                onClick={addProject}
+              >
+                + Add Project
+              </p>
+            </div>
+          )}
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
@@ -96,7 +183,13 @@ const MyProjects = () => {
                       </>
                     ) : (
                       <>
-                        <button className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white">
+                        <button
+                          className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
+                          onClick={() => {
+                            setCurrentProject(index);
+                            viewApplications(index);
+                          }}
+                        >
                           View Applications
                         </button>
                       </>

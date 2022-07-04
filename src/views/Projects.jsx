@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { initializeContract } from "../utils/web3";
 import BlockUi from "react-block-ui";
 import "react-block-ui/style.css";
+import { toast } from "react-toastify";
 
 const Projects = () => {
   const [loading, setLoading] = useState(false);
@@ -18,34 +19,37 @@ const Projects = () => {
     console.log("My wallet addr :", myAddress);
     const projectList = [];
     const totalProjects = await contract.methods.projectIndex().call();
+    console.log("totalProjects :>> ", totalProjects);
 
     for (let i = 0; i < totalProjects; i++) {
       const project = await contract.methods.allProject(i).call();
-      console.log(`project ${i} : ${project}`);
+      // console.log(`project ${i} : ${project}`);
       projectList.push(project);
     }
 
-    console.log(projectList);
+    console.log("projectList :>> ", projectList);
     setAllProject(projectList);
     setRole(myRole);
+    setLoading(false);
+  };
+  const handleProjectApply = async (project_id) => {
+    try {
+      console.log("project_id :>> ", project_id);
+      setLoading(true);
+      const account = localStorage.getItem("wallet_address");
+      const respond = await contractFA.methods
+        .applyForProject(project_id)
+        .send({ from: account });
+      console.log("status :>> ", respond.status);
+    } catch (error) {
+      toast.error("Something went wrong");
+    }
     setLoading(false);
   };
 
   useEffect(() => {
     fetchProjects();
   }, []);
-
-  const handleProjectApply = async (project_id) => {
-    setLoading(true);
-    if (localStorage.getItem("role") === "contractor") {
-      const account = localStorage.getItem("wallet_address");
-      const respond = await contractFA.methods
-        .applyForProject(project_id)
-        .send({ from: account });
-      console.log("status :>> ", respond.status);
-    }
-    setLoading(false);
-  };
 
   return (
     <>
