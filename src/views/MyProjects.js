@@ -5,8 +5,10 @@ import "react-block-ui/style.css";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import AllApplicants from "./modals/AllApplicants";
+import { useNavigate } from "react-router-dom";
 
 const MyProjects = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [allProject, setAllProject] = useState([]);
   const [role, setRole] = useState("");
@@ -32,7 +34,7 @@ const MyProjects = () => {
     for (let i = 0; i < totalProjects; i++) {
       const project = await contract.methods.allProject(i).call();
       console.log(`project ${i} : ${project}`);
-      if (project[2] === myAddress || project[3] === myAddress)
+      if (project[3] === myAddress || project[4] === myAddress)
         projectList.push(project);
     }
 
@@ -66,7 +68,6 @@ const MyProjects = () => {
   };
 
   const viewApplications = async (project_id) => {
-    setViewStatus(true);
     const list = [];
     const applicants = await contractFA.methods
       .getProjectApplications(project_id)
@@ -78,7 +79,9 @@ const MyProjects = () => {
         .call({ from: applicants[i] });
       list.push(contractor);
     }
+    console.log("list :>> ", list);
     setApplicantsList(list);
+    setViewStatus(true);
   };
 
   const handleAssignProject = async (id) => {
@@ -92,6 +95,18 @@ const MyProjects = () => {
     }
     setViewStatus(false);
     setFetchStatus(!fetchStatus);
+  };
+
+  const contractorDetail = async (contractorAddress) => {
+    const item = await contractFA.methods
+      .myContractor()
+      .call({ from: contractorAddress });
+    navigate(`/contractors/${contractorAddress}`, {
+      state: {
+        contractorAddress: contractorAddress,
+        contractor: item,
+      },
+    });
   };
 
   useEffect(() => {
@@ -125,80 +140,89 @@ const MyProjects = () => {
               </p>
             </div>
           )}
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Project Name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Province
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Status
-                </th>
+          {allProject.length > 0 && (
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    Project Name
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Province
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Status
+                  </th>
 
-                <th scope="col" className="px-6 py-3">
-                  Action
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {allProject.map((item, index) => (
-                <tr
-                  className="border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700"
-                  key={index}
-                >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                  >
-                    {item[0]}
-                  </th>
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                  >
-                    {item[1]}
-                  </th>
-                  <th className="px-6 py-4 ">
-                    {item[4] ? (
-                      <>
-                        <span>Assigned</span>
-                        <div className="w-3 h-3 bg-green-500 rounded-full ml-2"></div>
-                      </>
-                    ) : (
-                      <>
-                        <span>Not Assigned</span>
-                        <div className="w-3 h-3 bg-red-500 rounded-full ml-2"></div>
-                      </>
-                    )}
-                  </th>
-                  <th className="px-6 py-4 ">
-                    {item[4] ? (
-                      <>
-                        <button className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white">
-                          View Contractor
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
-                          onClick={() => {
-                            setCurrentProject(index);
-                            viewApplications(index);
-                          }}
-                        >
-                          View Applications
-                        </button>
-                      </>
-                    )}
-                  </th>
+                  {role !== "contractor" && (
+                    <th scope="col" className="px-6 py-3">
+                      Action
+                    </th>
+                  )}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {allProject.map((item, index) => (
+                  <tr
+                    className="border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700"
+                    key={index}
+                  >
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                    >
+                      {item[1]}
+                    </th>
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                    >
+                      {item[2]}
+                    </th>
+                    <th className="px-6 py-4 ">
+                      {item[5] ? (
+                        <>
+                          <span>Assigned</span>
+                          <div className="w-3 h-3 bg-green-500 rounded-full ml-2"></div>
+                        </>
+                      ) : (
+                        <>
+                          <span>Not Assigned</span>
+                          <div className="w-3 h-3 bg-red-500 rounded-full ml-2"></div>
+                        </>
+                      )}
+                    </th>
+                    {role !== "contractor" && (
+                      <th className="px-6 py-4 ">
+                        {item[5] ? (
+                          <>
+                            <button
+                              className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
+                              onClick={() => contractorDetail(item[4])}
+                            >
+                              View Contractor
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
+                              onClick={() => {
+                                setCurrentProject(item[0]);
+                                viewApplications(item[0]);
+                              }}
+                            >
+                              View Applications
+                            </button>
+                          </>
+                        )}
+                      </th>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </BlockUi>
     </>

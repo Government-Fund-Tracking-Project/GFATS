@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { initializeContract } from "../utils/web3";
+import { initializeContract } from "../../utils/web3";
 import BlockUi from "react-block-ui";
 import "react-block-ui/style.css";
+import { useNavigate } from "react-router-dom";
 
-const Contractors = () => {
+const ContractorsList = () => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [allContractors, setAllContractors] = useState([]);
   const [contractFA, setContractFA] = useState({});
+  const [fetchStatus, setFetchStatus] = useState(false);
 
   const fetchContractorList = async () => {
     setLoading(true);
@@ -34,14 +37,25 @@ const Contractors = () => {
       const respond = await contractFA.methods
         .verifyContractor(contractor_address)
         .send({ from: account });
+      setFetchStatus(!fetchStatus);
       console.log("status :>> ", respond.status);
     }
     setLoading(false);
   };
 
+  const contractorDetail = (contractorAddress, item) => {
+    console.log("item :>> ", item);
+    navigate(`/contractors/${contractorAddress}`, {
+      state: {
+        contractorAddress: contractorAddress,
+        contractor: item,
+      },
+    });
+  };
+
   useEffect(() => {
     fetchContractorList();
-  }, []);
+  }, [fetchStatus]);
 
   return (
     <>
@@ -71,20 +85,20 @@ const Contractors = () => {
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
                   >
-                    {item[0]}
+                    {item[1]}
                   </th>
                   <td className="px-6 py-4 flex">
-                    <span>{item[2] ? "Active" : "Inactive"}</span>
+                    <span>{item[3] ? "Active" : "Inactive"}</span>
                     <div
                       className={
-                        item[2]
+                        item[3]
                           ? "w-3 h-3 bg-green-500 rounded-full ml-2"
                           : "w-3 h-3 bg-red-500 rounded-full ml-2"
                       }
                     ></div>
                   </td>
                   <td className=" py-4">
-                    {!item[2] ? (
+                    {!item[3] ? (
                       <>
                         <button
                           className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
@@ -94,7 +108,10 @@ const Contractors = () => {
                         </button>
                       </>
                     ) : (
-                      <button className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white">
+                      <button
+                        className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
+                        onClick={() => contractorDetail(item[3], item)}
+                      >
                         View Detail
                       </button>
                     )}
@@ -109,4 +126,4 @@ const Contractors = () => {
   );
 };
 
-export default Contractors;
+export default ContractorsList;

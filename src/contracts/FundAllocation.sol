@@ -26,6 +26,7 @@ contract FundAllocation {
     }
 
     struct Project {
+        uint256 id;
         string name;
         string province;
         address projectOwner;
@@ -169,7 +170,9 @@ contract FundAllocation {
             uint256,
             string memory,
             uint256,
-            string memory
+            string memory,
+            bool,
+            bool
         )
     {
         Province memory currentProvince = provinces[msg.sender];
@@ -177,7 +180,9 @@ contract FundAllocation {
             currentProvince.id,
             currentProvince.name,
             currentProvince.stateNo,
-            currentProvince.capital
+            currentProvince.capital,
+            currentProvince.isRegistered,
+            currentProvince.isApproved
         );
     }
 
@@ -213,6 +218,7 @@ contract FundAllocation {
         public
         view
         returns (
+            uint256,
             string memory,
             bool,
             bool
@@ -221,6 +227,7 @@ contract FundAllocation {
         address _address = contractorList[_id];
         Contractor memory currentContractor = contractors[_address];
         return (
+            currentContractor.id,
             currentContractor.name,
             currentContractor.isRegistered,
             currentContractor.isApproved
@@ -231,10 +238,20 @@ contract FundAllocation {
         public
         view
         registeredAndApprovedContractor(msg.sender)
-        returns (uint256 id, string memory name)
+        returns (
+            uint256 id,
+            string memory name,
+            bool isRegistered,
+            bool isApproved
+        )
     {
         Contractor memory currentContractor = contractors[msg.sender];
-        return (currentContractor.id, currentContractor.name);
+        return (
+            currentContractor.id,
+            currentContractor.name,
+            currentContractor.isRegistered,
+            currentContractor.isApproved
+        );
     }
 
     function createProvinceProject(string memory _name)
@@ -243,6 +260,7 @@ contract FundAllocation {
         returns (bool)
     {
         Project memory currentProject = Project(
+            projectIndex,
             _name,
             provinces[msg.sender].name,
             msg.sender,
@@ -259,6 +277,7 @@ contract FundAllocation {
         public
         view
         returns (
+            uint256,
             string memory,
             string memory,
             address,
@@ -270,6 +289,7 @@ contract FundAllocation {
         require(_id >= 0 && _id < projectIndex, "Project doesn't exist");
         Project memory currentProject = projects[_id];
         return (
+            currentProject.id,
             currentProject.name,
             currentProject.province,
             currentProject.projectOwner,

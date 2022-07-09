@@ -1,5 +1,4 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
 
 const AllApplicants = ({
   setViewStatus,
@@ -33,28 +32,32 @@ const AllApplicants = ({
               All Applicants
             </h3>
           </div>
-          <div className="p-6">
-            {/* <p className="text-sm font-normal text-gray-500 dark:text-gray-400">
+          {applicantsList.length > 0 ? (
+            <div className="p-6">
+              {/* <p className="text-sm font-normal text-gray-500 dark:text-gray-400">
               Connect with one of our available wallet providers or create a new
               one.
             </p> */}
-            <ul className="my-4 space-y-3">
-              {applicantsList.map((item, index) => (
-                <li key={index}>
-                  <p className="flex items-center p-3 font-bold text-gray-900 bg-gray-50 rounded-lg dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">
-                    <span className="flex-1 ml-3 whitespace-nowrap">
-                      {item[1]}
-                    </span>
-                    <button onClick={() => handleAssignProject(index)}>
-                      <span className="inline-flex items-center justify-center px-2 py-0.5 ml-3 text-xs font-medium text-gray-500 bg-gray-200 rounded dark:bg-gray-700 dark:text-gray-400">
-                        Approve
+              <ul className="my-4 space-y-3">
+                {applicantsList.map((item, index) => (
+                  <li key={index}>
+                    <p className="flex items-center p-3 font-bold text-gray-900 bg-gray-50 rounded-lg dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-white">
+                      <span className="flex-1 ml-3 whitespace-nowrap">
+                        {item[1]}
                       </span>
-                    </button>
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
+                      <button onClick={() => handleAssignProject(index)}>
+                        <span className="inline-flex items-center justify-center px-2 py-0.5 ml-3 text-xs font-medium text-gray-500 bg-gray-200 rounded dark:bg-gray-700 dark:text-gray-400">
+                          Approve
+                        </span>
+                      </button>
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <div className="p-5 text-center">No Applicants available</div>
+          )}
         </div>
       </div>
     </div>

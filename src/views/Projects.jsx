@@ -54,82 +54,88 @@ const Projects = () => {
   return (
     <>
       <BlockUi tag="div" blocking={loading}>
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-16">
-          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Project Name
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Province
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Status
-                </th>
-                {role === "contractor" && (
+        {allProject.length > 0 ? (
+          <div className="relative overflow-x-auto shadow-md sm:rounded-lg p-16">
+            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
                   <th scope="col" className="px-6 py-3">
-                    Action
+                    Project Name
                   </th>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {allProject.map((item, index) => (
-                <tr
-                  className="border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700"
-                  key={index}
-                >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                  >
-                    {item[0]}
+                  <th scope="col" className="px-6 py-3">
+                    Province
                   </th>
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
-                  >
-                    {item[1]}
+                  <th scope="col" className="px-6 py-3">
+                    Status
                   </th>
-                  <td className="px-6 py-4 flex">
-                    {item[4] ? (
-                      <>
-                        <span>Assigned</span>
-                        <div className="w-3 h-3 bg-green-500 rounded-full ml-2"></div>
-                      </>
-                    ) : (
-                      <>
-                        <span>Not Assigned</span>
-                        <div className="w-3 h-3 bg-red-500 rounded-full ml-2"></div>
-                      </>
-                    )}
-                  </td>
-                  {role === "contractor" &&
-                    (!item[4] ? (
-                      <td className=" py-4">
-                        <button
-                          className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
-                          onClick={() => handleProjectApply(index)}
-                        >
-                          Apply
-                        </button>
-                      </td>
-                    ) : (
-                      <td className=" py-4">
-                        <button
-                          className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 focus:outline-none"
-                          disabled
-                        >
-                          Apply
-                        </button>
-                      </td>
-                    ))}
+                  {role === "contractor" && (
+                    <th scope="col" className="px-6 py-3">
+                      Action
+                    </th>
+                  )}
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {allProject.map((item, index) => (
+                  <tr
+                    className="border-b dark:bg-gray-800 dark:border-gray-700 odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700"
+                    key={index}
+                  >
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                    >
+                      {item[1]}
+                    </th>
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap"
+                    >
+                      {item[2]}
+                    </th>
+                    <td className="px-6 py-4 flex">
+                      {item[5] ? (
+                        <>
+                          <span>Assigned</span>
+                          <div className="w-3 h-3 bg-green-500 rounded-full ml-2"></div>
+                        </>
+                      ) : (
+                        <>
+                          <span>Not Assigned</span>
+                          <div className="w-3 h-3 bg-red-500 rounded-full ml-2"></div>
+                        </>
+                      )}
+                    </td>
+                    {role === "contractor" &&
+                      (!item[5] ? (
+                        <td className=" py-4">
+                          <button
+                            className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
+                            onClick={() => handleProjectApply(index)}
+                          >
+                            Apply
+                          </button>
+                        </td>
+                      ) : (
+                        <td className=" py-4">
+                          <button
+                            className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 focus:outline-none"
+                            disabled
+                          >
+                            Already Applied
+                          </button>
+                        </td>
+                      ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="text-center align-center bg-red-500">
+            No projects Available
+          </div>
+        )}
       </BlockUi>
     </>
   );

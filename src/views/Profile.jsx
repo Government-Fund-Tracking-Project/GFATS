@@ -15,6 +15,7 @@ const Profile = () => {
   const [provinceNumber, setProvinceNumber] = useState("");
   const [contractorNumber, setContractorNumber] = useState("");
   const [myProvince, setMyProvince] = useState({});
+  const [myContractor, setMyContractor] = useState({});
 
   const address = localStorage.getItem("wallet_address");
   const role = localStorage.getItem("role");
@@ -41,6 +42,11 @@ const Profile = () => {
         .myProvince()
         .call({ from: address });
       setMyProvince(province);
+    } else if (role === "contractor") {
+      const contractor = await contract.methods
+        .myContractor()
+        .call({ from: address });
+      setMyContractor(contractor);
     }
   };
 
@@ -104,7 +110,8 @@ const Profile = () => {
           )}
           <div className="text-center mt-2">
             <h3 className="text-2xl text-slate-700 font-bold leading-normal mb-1">
-              {myProvince[1]} {role.charAt(0).toUpperCase() + role.slice(1)}
+              {myProvince[1] || myContractor[1]}{" "}
+              {role.charAt(0).toUpperCase() + role.slice(1)}
             </h3>
             {role === "province" && (
               <>
@@ -115,6 +122,14 @@ const Profile = () => {
                 <div className="text-xs mt-0 mb-2 text-slate-400 font-bold uppercase">
                   <i className="fas fa-map-marker-alt mr-2 text-slate-400 opacity-75"></i>
                   Province Capital: {myProvince[3]}
+                </div>
+              </>
+            )}
+            {role === "contractor" && (
+              <>
+                <div className="text-xs mt-0 mb-2 text-slate-400 font-bold uppercase">
+                  <i className="fas fa-map-marker-alt mr-2 text-slate-400 opacity-75"></i>
+                  Contractor No.: {myContractor[0]}
                 </div>
               </>
             )}

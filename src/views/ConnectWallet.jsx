@@ -18,7 +18,6 @@ const ConnectWallet = () => {
         const contract = await initializeContract();
         const user = await contract.methods.findUserRole(res).call();
         localStorage.setItem("wallet_address", res);
-        toast.success("Wallet Connected Successfully");
         if (user === "admin") {
           localStorage.setItem("role", user);
           setLoading(false);
@@ -28,19 +27,36 @@ const ConnectWallet = () => {
             const province = await contract.methods
               .myProvince()
               .call({ from: res });
-
-            localStorage.setItem("role", user);
-            setLoading(false);
-            navigate("/");
+            if (province[5]) {
+              localStorage.setItem("role", user);
+              toast.success("Wallet Connected Successfully");
+              setLoading(false);
+              navigate("/");
+            } else {
+              navigate("/contact-admin");
+            }
           } catch (err) {
             setLoading(false);
-
             navigate("/contact-admin");
           }
         } else if (user === "contractor") {
-          localStorage.setItem("role", user);
-          setLoading(false);
-          navigate("/");
+          try {
+            const contractor = await contract.methods
+              .myContractor()
+              .call({ from: res });
+            console.log("contractor :>> ", contractor);
+            if (contractor["isApproved"]) {
+              toast.success("Wallet Connected Successfully");
+
+              localStorage.setItem("role", user);
+              setLoading(false);
+              navigate("/");
+            } else {
+              navigate("/contact-admin");
+            }
+          } catch (error) {
+            navigate("/contact-admin");
+          }
         } else {
           navigate("/signup");
         }

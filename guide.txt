@@ -1,0 +1,6 @@
+const web3 = require("web3-eth-abi");
+const owner = web3.decodeParameter("address", eventdata.topics[2]);
+
+https://api-testnet.bscscan.com/api?module=logs&action=getLogs&fromBlock=20567795&toBlock=20621428&address=0xE85cafc8ae7A8C698442ec79Bb928f9c67ffda44&topic0=0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef&apikey=5HHA2GRZIBK93MCZBDH1CAUZA6T2BFDWY3
+
+https://api-testnet.bscscan.com/api?module=logs&action=getLogs&fromBlock=20567797&address=0xE85cafc8ae7A8C698442ec79Bb928f9c67ffda44&topic0=0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef&apiKey=5HHA2GRZIBK93MCZBDH1CAUZA6T2BFDWY3

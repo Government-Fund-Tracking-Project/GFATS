@@ -8,7 +8,6 @@ import {
   Profile,
   ErrorPage,
   Signup,
-  Contractors,
   ContactAdmin,
   Projects,
   AddProject,
@@ -16,6 +15,11 @@ import {
 } from "./views";
 
 import { Provinces, ProvincesList, ProvincesDetail } from "./views/admin";
+import {
+  Contractors,
+  ContractorsList,
+  ContractorDetail,
+} from "./views/contractors";
 
 const PrivateRoute = ({ component: Component }) => {
   let is_authenticate = Boolean(localStorage.getItem("wallet_address"));
@@ -49,7 +53,11 @@ function App() {
               <Route path=":id" element={<ProvincesDetail />}></Route>
             </Route>
 
-            <Route path="/contractors" element={<Contractors />}></Route>
+            <Route path="/contractors/" element={<Contractors />}>
+              <Route index element={<ContractorsList />}></Route>
+              <Route path=":id" element={<ContractorDetail />}></Route>
+            </Route>
+
             <Route path="/projects" element={<Projects />}></Route>
             <Route path="/addproject" element={<AddProject />}></Route>
             <Route path="/myprojects" element={<MyProjects />}></Route>
