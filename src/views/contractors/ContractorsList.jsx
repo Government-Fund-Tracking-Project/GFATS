@@ -23,7 +23,7 @@ const ContractorsList = () => {
       console.log(contractorAddress);
       console.log(`contractor ${i} : ${contractor}`);
       console.log(contractor);
-      contractorList.push({ ...contractor, 3: contractorAddress });
+      contractorList.push({ ...contractor, 4: contractorAddress });
     }
     setAllContractors(contractorList);
     setLoading(false);
@@ -102,7 +102,7 @@ const ContractorsList = () => {
                       <>
                         <button
                           className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
-                          onClick={() => handleContractorsApprove(item[3])}
+                          onClick={() => handleContractorsApprove(item[4])}
                         >
                           Approve
                         </button>
@@ -110,7 +110,7 @@ const ContractorsList = () => {
                     ) : (
                       <button
                         className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
-                        onClick={() => contractorDetail(item[3], item)}
+                        onClick={() => contractorDetail(item[4], item)}
                       >
                         View Detail
                       </button>
