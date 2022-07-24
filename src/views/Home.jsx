@@ -14,7 +14,6 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
 
   const { chainId } = useWeb3React();
-  console.log("chainId :>> ", chainId);
   const fetchTransferHistory = async () => {
     setLoading(true);
 

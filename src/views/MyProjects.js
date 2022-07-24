@@ -49,7 +49,6 @@ const MyProjects = () => {
       confirmButtonText: "Confirm",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        console.log(result.value);
         try {
           const projectAddition = await contractFA.methods
             .createProvinceProject(result.value)

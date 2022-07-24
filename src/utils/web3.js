@@ -5,7 +5,6 @@ import FAerc20 from "../abis/FAerc20.json";
 const noOp = () => {};
 
 export const loadWeb3 = async ({ onSuccess = noOp, onError = noOp }) => {
-  console.log("Web3.givenProvider", Web3.givenProvider);
   if (window.ethereum) {
     window.web3 = new Web3(window.ethereum);
     try {

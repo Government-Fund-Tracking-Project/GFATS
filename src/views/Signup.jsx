@@ -34,7 +34,6 @@ const Signup = () => {
       const registerContractor = await contract.methods
         .registerContractor(formData.get("name"))
         .send({ from: account });
-      console.log("registerContractor :>> ", registerContractor);
       if (registerContractor) {
         toast.info("Contact admin for your complete registration");
       } else {

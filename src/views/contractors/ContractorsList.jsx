@@ -27,7 +27,6 @@ const ContractorsList = () => {
   };
 
   const handleContractorsApprove = async (contractor_address) => {
-    console.log("inside approve");
     setLoading(true);
     if (localStorage.getItem("role") === "province") {
       const account = localStorage.getItem("wallet_address");
