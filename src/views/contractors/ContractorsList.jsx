@@ -20,10 +20,7 @@ const ContractorsList = () => {
     for (let i = 0; i < totalContractors; i++) {
       const contractor = await contract.methods.allContractor(i).call();
       const contractorAddress = await contract.methods.contractorList(i).call();
-      console.log(contractorAddress);
-      console.log(`contractor ${i} : ${contractor}`);
-      console.log(contractor);
-      contractorList.push({ ...contractor, 3: contractorAddress });
+      contractorList.push({ ...contractor, 4: contractorAddress });
     }
     setAllContractors(contractorList);
     setLoading(false);
@@ -34,17 +31,15 @@ const ContractorsList = () => {
     setLoading(true);
     if (localStorage.getItem("role") === "province") {
       const account = localStorage.getItem("wallet_address");
-      const respond = await contractFA.methods
+      await contractFA.methods
         .verifyContractor(contractor_address)
         .send({ from: account });
       setFetchStatus(!fetchStatus);
-      console.log("status :>> ", respond.status);
     }
     setLoading(false);
   };
 
   const contractorDetail = (contractorAddress, item) => {
-    console.log("item :>> ", item);
     navigate(`/contractors/${contractorAddress}`, {
       state: {
         contractorAddress: contractorAddress,
@@ -98,22 +93,22 @@ const ContractorsList = () => {
                     ></div>
                   </td>
                   <td className=" py-4">
-                    {!item[3] ? (
+                    {item[3] ? (
+                      <button
+                        className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
+                        onClick={() => contractorDetail(item[4], item)}
+                      >
+                        View Detail
+                      </button>
+                    ) : (
                       <>
                         <button
                           className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
-                          onClick={() => handleContractorsApprove(item[3])}
+                          onClick={() => handleContractorsApprove(item[4])}
                         >
                           Approve
                         </button>
                       </>
-                    ) : (
-                      <button
-                        className="border-2 border-teal-500 text-teal-500 rounded-full px-4 py-2 mr-2 hover:bg-teal-500 hover:text-white"
-                        onClick={() => contractorDetail(item[3], item)}
-                      >
-                        View Detail
-                      </button>
                     )}
                   </td>
                 </tr>

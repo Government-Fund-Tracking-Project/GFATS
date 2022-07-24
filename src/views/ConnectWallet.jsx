@@ -44,7 +44,6 @@ const ConnectWallet = () => {
             const contractor = await contract.methods
               .myContractor()
               .call({ from: res });
-            console.log("contractor :>> ", contractor);
             if (contractor["isApproved"]) {
               toast.success("Wallet Connected Successfully");
 

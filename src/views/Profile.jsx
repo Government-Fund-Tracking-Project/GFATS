@@ -52,7 +52,6 @@ const Profile = () => {
 
   const handleMint = async () => {
     setLoading(true);
-    console.log("Web3 :>> ", Web3);
     const token = Web3.utils.toWei(noOfToken);
     const response = await contractERC20.methods
       .mint(token, address)

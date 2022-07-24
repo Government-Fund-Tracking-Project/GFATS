@@ -29,16 +29,13 @@ const MyProjects = () => {
     const myRole = localStorage.getItem("role");
     const projectList = [];
     const totalProjects = await contract.methods.projectIndex().call();
-    console.log("totalProjects :>> ", totalProjects);
 
     for (let i = 0; i < totalProjects; i++) {
       const project = await contract.methods.allProject(i).call();
-      console.log(`project ${i} : ${project}`);
       if (project[3] === myAddress || project[4] === myAddress)
         projectList.push(project);
     }
 
-    console.log("projectList :>> ", projectList);
     setAllProject(projectList);
     setRole(myRole);
     setLoading(false);
@@ -61,7 +58,6 @@ const MyProjects = () => {
           toast.success("Project added successfully");
         } catch (error) {
           toast.error("Error while adding project");
-          console.log("error occured", error);
         }
       }
     });
@@ -79,7 +75,6 @@ const MyProjects = () => {
         .call({ from: applicants[i] });
       list.push(contractor);
     }
-    console.log("list :>> ", list);
     setApplicantsList(list);
     setViewStatus(true);
   };

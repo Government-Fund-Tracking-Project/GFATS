@@ -2,13 +2,17 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { initializeContract } from "../utils/web3";
+import BlockUi from "react-block-ui";
+import "react-block-ui/style.css";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [province, setProvince] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const formData = new FormData(e.target);
     const account = localStorage.getItem("wallet_address");
 
@@ -36,12 +40,13 @@ const Signup = () => {
       } else {
         toast.error("Contractor Registration Failed");
       }
+      setLoading(false);
       navigate("/contact-admin");
     }
   };
 
   return (
-    <div>
+    <BlockUi tag="div" blocking={loading}>
       <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
         <div class="relative p-4 w-full max-w-md h-full md:h-auto">
           <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -171,7 +176,7 @@ const Signup = () => {
         </div>
       </div>
       <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-    </div>
+    </BlockUi>
   );
 };
 

@@ -16,31 +16,25 @@ const Projects = () => {
     setContractFA({ ...contract });
     const myAddress = localStorage.getItem("wallet_address");
     const myRole = localStorage.getItem("role");
-    console.log("My wallet addr :", myAddress);
     const projectList = [];
     const totalProjects = await contract.methods.projectIndex().call();
-    console.log("totalProjects :>> ", totalProjects);
 
     for (let i = 0; i < totalProjects; i++) {
       const project = await contract.methods.allProject(i).call();
-      // console.log(`project ${i} : ${project}`);
       projectList.push(project);
     }
 
-    console.log("projectList :>> ", projectList);
     setAllProject(projectList);
     setRole(myRole);
     setLoading(false);
   };
   const handleProjectApply = async (project_id) => {
     try {
-      console.log("project_id :>> ", project_id);
       setLoading(true);
       const account = localStorage.getItem("wallet_address");
       const respond = await contractFA.methods
         .applyForProject(project_id)
         .send({ from: account });
-      console.log("status :>> ", respond.status);
     } catch (error) {
       toast.error("Something went wrong");
     }

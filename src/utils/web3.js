@@ -5,15 +5,32 @@ import FAerc20 from "../abis/FAerc20.json";
 const noOp = () => {};
 
 export const loadWeb3 = async ({ onSuccess = noOp, onError = noOp }) => {
+  console.log("Web3.givenProvider", Web3.givenProvider);
   if (window.ethereum) {
     window.web3 = new Web3(window.ethereum);
     try {
       await window.ethereum.enable();
       const { web3 } = window;
       const accounts = await web3.eth.getAccounts();
-      // const balance = await web3.eth.getBalance(accounts[0]);
-      // console.log("balance :>> ", balance);
-      // console.log("object :>> ", web3.eth.getChainId());
+      const chainId = await web3.eth.getChainId();
+      if (chainId !== 97) {
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [
+            {
+              chainId: "0x61",
+              chainName: "binance_testnet",
+              nativeCurrency: {
+                name: "BNB",
+                symbol: "BNB",
+                decimals: 18,
+              },
+              rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545"],
+              blockExplorerUrls: ["https://testnet.bscscan.com"],
+            },
+          ],
+        });
+      }
       onSuccess(accounts[0]);
     } catch (error) {
       onError(error);

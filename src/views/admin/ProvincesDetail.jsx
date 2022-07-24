@@ -18,7 +18,6 @@ const ProvincesDetail = () => {
   const [loading, setLoading] = useState(false);
 
   const allocateToken = async () => {
-    console.log("provinceAddress :>> ", provinceAddress);
     const { value: tokenAmount } = await Swal.fire({
       title: "Allocate token to",
       input: "text",
@@ -30,7 +29,6 @@ const ProvincesDetail = () => {
       setLoading(true);
       const adminAddress = localStorage.getItem("wallet_address");
       const token = Web3.utils.toWei(tokenAmount);
-      console.log("token :>> ", token);
       const contractERC20 = await initializeContractERC20();
       try {
         await contractERC20.methods
@@ -39,7 +37,6 @@ const ProvincesDetail = () => {
         toast.success("Successfully transfered token");
         setLoading(false);
       } catch (error) {
-        console.log("error :>> ", error);
         toast.error("Something went wrong!!!");
         setLoading(false);
       }

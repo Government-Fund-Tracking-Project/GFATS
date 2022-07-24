@@ -20,7 +20,6 @@ const ProvincesList = () => {
     const provinceList = [];
     for (let i = 0; i < totalProvinces; i++) {
       const province = await contract.methods.allProvince(i).call();
-      console.log("province :>> ", province);
       provinceList.push(province);
     }
     setAllProvinces(provinceList);

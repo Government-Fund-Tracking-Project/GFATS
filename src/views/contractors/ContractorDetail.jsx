@@ -65,14 +65,12 @@ const ContractorDetail = () => {
       const project = await contract.methods.allProject(i).call();
       if (project[4] === contractorAddress) projectList.push(project);
     }
-    console.log("projectList :>> ", projectList);
 
     setAllProject(projectList);
     setLoading(false);
   };
 
   useEffect(() => {
-    console.log("contractorDetail :>> ", contractorDetail);
     if (!contractorAddress) navigate("/contractors");
   });
 

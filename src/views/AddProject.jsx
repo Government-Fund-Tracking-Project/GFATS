@@ -16,7 +16,6 @@ const AddProject = () => {
       const projectAddition = await contractFA.methods
         .createProvinceProject(formData.get("projname"))
         .send({ from: myAddress });
-      console.log("project successfully added", projectAddition);
       e.target.reset();
     } catch (error) {
       console.log("error occured", error);
