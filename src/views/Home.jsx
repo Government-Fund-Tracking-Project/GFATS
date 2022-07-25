@@ -7,13 +7,11 @@ import Web3 from "web3";
 import { loadWeb3 } from "../utils/web3";
 import BlockUi from "react-block-ui";
 import "react-block-ui/style.css";
-import { useWeb3React } from "@web3-react/core";
 
 const Home = () => {
   const [transaction, setTransaction] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const { chainId } = useWeb3React();
   const fetchTransferHistory = async () => {
     setLoading(true);
 
