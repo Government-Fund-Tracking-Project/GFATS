@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { initializeContract } from "../utils/web3";
-import BlockUi from "react-block-ui";
-import "react-block-ui/style.css";
 
 const AddProject = () => {
   const [contractFA, setContractFA] = useState({});
@@ -13,7 +11,7 @@ const AddProject = () => {
     const formData = new FormData(e.target);
     const myAddress = localStorage.getItem("wallet_address");
     try {
-      const projectAddition = await contractFA.methods
+      await contractFA.methods
         .createProvinceProject(formData.get("projname"))
         .send({ from: myAddress });
       e.target.reset();

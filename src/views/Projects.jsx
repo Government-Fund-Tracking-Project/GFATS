@@ -14,7 +14,6 @@ const Projects = () => {
     setLoading(true);
     const contract = await initializeContract();
     setContractFA({ ...contract });
-    const myAddress = localStorage.getItem("wallet_address");
     const myRole = localStorage.getItem("role");
     const projectList = [];
     const totalProjects = await contract.methods.projectIndex().call();
@@ -32,7 +31,7 @@ const Projects = () => {
     try {
       setLoading(true);
       const account = localStorage.getItem("wallet_address");
-      const respond = await contractFA.methods
+      await contractFA.methods
         .applyForProject(project_id)
         .send({ from: account });
     } catch (error) {

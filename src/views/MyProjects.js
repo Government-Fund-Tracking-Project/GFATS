@@ -50,7 +50,7 @@ const MyProjects = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const projectAddition = await contractFA.methods
+          await contractFA.methods
             .createProvinceProject(result.value)
             .send({ from: currentAddress });
           setFetchStatus(!fetchStatus);
